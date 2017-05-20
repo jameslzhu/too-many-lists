@@ -175,7 +175,8 @@ bit more space than the second layout.
 
 One of our nodes not being allocated at all is also, perhaps surprisingly,
 *worse* than always allocating it. This is because it gives us a *non-uniform*
-node layout. This doesn't have much of an appreciable effect on pushing and
+node layout: the first node is created on the stack, and the rest are allocated
+on the heap. This doesn't have much of an appreciable effect on pushing and
 popping nodes, but it does have an effect on splitting and merging lists.
 
 Consider splitting a list in both layouts:
