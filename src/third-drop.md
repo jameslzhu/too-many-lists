@@ -29,21 +29,7 @@ gives us shared access. There's two ways to handle this.
 The first way is that we can keep grabbing the tail of the list and dropping the
 previous one to decrement its count. This will prevent the old list from
 recursively dropping the rest of the list because we hold an outstanding
-reference to it. This has the unfortunate problem that we traverse the *entire*
-list whenever we drop it. In particular this means building a list of length
-n in place takes O(n<sup>2</sup>) as we traverse a lists of length `n-1`,
-`n-2`, .., `1` to guard against overflow (this is really really really
-really bad).
-
-The second way is if we could identify that we're the last list that knows
-about this node, we could in *principle* actually move the Node out of the Rc.
-Then we could also know when to stop: whenver we *can't* hoist out the Node.
-For reference, the function is called `try_unwrap`.
-
-Rc actually lets you do this... Honestly, I'd rather
-risk blowing the stack sometimes than iterate every list whenever it gets
-dropped. Still if you'd rather not blow the stack, here's the first
-(O(n)) solution:
+reference to it.
 
 ```rust
 impl<T> Drop for List<T> {
@@ -62,7 +48,18 @@ impl<T> Drop for List<T> {
 }
 ```
 
-and here's the second (amortized O(1)) solution:
+This has the unfortunate problem that we traverse the *entire*
+list whenever we drop it. In particular this means building a list of length
+n in place takes O(n<sup>2</sup>) as we traverse a lists of length `n-1`,
+`n-2`, .., `1` to guard against overflow (this is really really really
+really bad).
+
+The second way is if we identify that we're the last list that knows about this
+node, we can actually move the Node out of the Rc. Then we could also know when
+to stop: whenver we *can't* hoist out the Node.
+
+`Rc` lets you do this with `try_unwrap`. It hoists the value only if there's
+only one reference to the Node:
 
 ```rust
 impl<T> Drop for List<T> {
@@ -79,3 +76,4 @@ impl<T> Drop for List<T> {
 }
 ```
 
+No messy stack explosions, and no unnecessary traversals. *Nice.*
