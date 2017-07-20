@@ -114,10 +114,12 @@ reference counted pointers: they're shared!
 
 This was a problem for us when we wanted to implement Drop for our reference
 counted list, because we needed to gain ownership of the nodes to drop them
-one at a time. 
+one at a time.
 
-Now we can use `Rc::try_unwrap`, which moves out the contents of an Rc out
-if its refcount is 1.
+Luckily for us, the solution carries over. `Rc::try_unwrap` to the rescue!
+
+(For the forgetful, `Rc::try_unwrap`: moves the contents of an Rc out
+if its refcount is 1.)
 
 ```rust
 Rc::try_unwrap(old_head).unwrap().into_inner().elem

@@ -18,7 +18,7 @@ From here on out, we're going to be focusing on other side of this coin:
 getting back all the control by making our implementation *unsafe*.
 
 ```rust
-use std::cell::{Ref, RefMut, RefCell};
+use std::cell::{Ref, RefCell};
 use std::rc::Rc;
 
 pub struct List<T> {

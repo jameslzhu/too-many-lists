@@ -124,7 +124,7 @@ Blurp. Gotta import some stuff.
 
 
 ```rust
-use std::cell::{Ref, RefMut, RefCell};
+use std::cell::{Ref, RefCell};
 ```
 
 ```text
@@ -154,7 +154,7 @@ Instead, we're going to go deeper down. Let's
 have some *fun*. Our source of fun is *this beast*:
 
 ```rust
-map<U, F>(orig: Ref<'b, T>, f: F) -> Ref<'b, U>
+fn map<U, F>(orig: Ref<'b, T>, f: F) -> Ref<'b, U>
     where F: FnOnce(&T) -> &U,
           U: ?Sized
 ```
@@ -180,9 +180,6 @@ pub fn peek_front(&self) -> Option<Ref<T>> {
 ```text
 > cargo build
    Compiling lists v0.1.0 (file:///Users/ABeingessner/dev/too-many-lists/lists)
-src/fourth.rs:1:22: 1:28 warning: unused import, #[warn(unused_imports)] on by default
-src/fourth.rs:1 use std::cell::{Ref, RefMut, RefCell};
-                                     ^~~~~~
 ```
 
 Awww yissss
